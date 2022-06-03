@@ -31,6 +31,7 @@ const UserSchema = new mongoose.Schema({
     },
 }, { timestamps: true});
 
+/**Test arrow function first, change to annonymous function if needed */
 UserSchema.methods.setPassword = (password) => {
     this.salt = crypto.randomBytes(16).toString('hex');
     this.hash = crypto.pbkdf2Sync(password, this.salt, 100, 64, 'sha512').toString('hex');
@@ -40,10 +41,16 @@ UserSchema.methods.isValidPassword = (password) => {
     return this.hash === restored;
 };
 UserSchema.methods.generateJwt = () => {
-    const currentTime = new Date();
-    const expire = new Date(currentTime.getSeconds() + 120);
-    /**Look further into expiresIn property */
-    return jwt.sign({ id: this._id, username: this.username }, secret, { expiresIn: expire.getSeconds() });
+    const expire = new Date(new Date().getSeconds() + 120);
+    return jwt.sign({ id: this._id, username: this.username }, secret,
+        { expiresIn: expire.getSeconds() - new Date().getSeconds() });
+};
+UserSchema.methods.toAuthJSON = () => {
+    return {
+        username: this.username,
+        // email: this.email,
+        token: this.generateJwt(),
+    };
 };
 
 UserSchema.plugin(uniqueValidator, { message: "Field is already taken" });
