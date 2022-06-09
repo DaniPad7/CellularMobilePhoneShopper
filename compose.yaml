@@ -1,0 +1,22 @@
+services:
+  auth-mongodb:
+    image: "mongo"
+    container_name: "auth-mongodb"
+    labels:
+      - app=auth-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=simplepass123
+    ports:
+      - "27017:27017"
+  
+  auth-ser:
+    build: auth/
+    container_name: "auth-ser"
+    labels:
+      - app=auth-ser
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-mongodb
+
