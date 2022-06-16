@@ -6,7 +6,9 @@ services:
       - app=auth-mongodb
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=simplepass123
+      - MONGO_INITDB_ROOT_PASSWORD=simplepass1234auth
+    expose:
+      - 27017
     ports:
       - "27017:27017"
   
@@ -16,9 +18,24 @@ services:
     labels:
       - app=auth-ser
     environment:
-      - MONGO_URI=mongodb://root:simplepass123@auth-mongodb:27017
+      - MONGO_URI=mongodb://root:simplepass1234auth@auth-mongodb:27017
     ports:
       - "3000:3000"
     depends_on:
       - auth-mongodb
+
+  mobile-phones-mysqldb:
+    image: "mysql"
+    container_name: "mobile-phones-mysqldb"
+    labels:
+      - app=mobile-phones-mysqldb
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+      - MYSQL_DATABASE=mobile_phones
+      - MYSQL_USER=appuser
+      - MYSQL_PASSWORD=simplepass1234mobilephones
+    expose:
+      - 3306
+    ports:
+      - "3306:3306"
 

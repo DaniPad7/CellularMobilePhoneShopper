@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
+@Entity()
+@Table(/*schema = "mobile_phones"*/)
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

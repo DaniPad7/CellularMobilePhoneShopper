@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(/*schema = "mobile_phones"*/)
 public class CellPhone {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
