@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity()
-@Table(/*schema = "mobile_phones"*/)
+@Table()
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,15 +24,11 @@ public class AppUser {
     @Column()
     private Long version;
 
-    @ManyToMany(mappedBy = "users")
-    private Set<CellPhone> cellphones = new HashSet<>();
-
-    public AppUser(Long id, String username, String email, Long version, Set<CellPhone> cellphones) {
+    public AppUser(Long id, String username, String email, Long version) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.version = version;
-        this.cellphones = cellphones;
     }
 
     public AppUser() { super(); }
@@ -60,7 +56,6 @@ public class AppUser {
     public void setEmail(String email) {
         this.email = email;
     }
-
     public Long getVersion() {
         return version;
     }
@@ -69,25 +64,17 @@ public class AppUser {
         this.version = version;
     }
 
-    public Set<CellPhone> getCellphones() {
-        return cellphones;
-    }
-
-    public void setCellphones(Set<CellPhone> cellphones) {
-        this.cellphones = cellphones;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppUser appUser = (AppUser) o;
-        return Objects.equals(id, appUser.id) && Objects.equals(username, appUser.username) && Objects.equals(email, appUser.email) && Objects.equals(version, appUser.version) && Objects.equals(cellphones, appUser.cellphones);
+        return Objects.equals(id, appUser.id) && Objects.equals(username, appUser.username) && Objects.equals(email, appUser.email) && Objects.equals(version, appUser.version);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, version, cellphones);
+        return Objects.hash(id, username, email, version);
     }
 
     @Override
@@ -97,7 +84,6 @@ public class AppUser {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", version=" + version +
-                ", cellphones=" + cellphones +
                 '}';
     }
 }

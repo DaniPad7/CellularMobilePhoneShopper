@@ -6,8 +6,8 @@ const BadRequestError =  require('../errors/bad-request-error');
 const signupRouter = express.Router();
 
 signupRouter.post('/auth/signup',[
-    body("username").isString().not().isEmpty().withMessage("Username must not be empty"),
-    body("email").isEmail().withMessage("Email is invalid"),
+    body("username").isString().not().isEmpty().isLength({ min: 5, max: 20 }).withMessage("Username must not be empty"),
+    body("email").isEmail().isLength({ min: 5, max: 20 }).withMessage("Email is invalid"),
     body("password").isLength({ min: 5, max: 20 })
 ], async (req, res, next) => {
     const { errors } = validationResult(req);

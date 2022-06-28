@@ -1,46 +1,75 @@
 package com.phoneshopper.mobile.model;
 
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
-@Table(/*schema = "mobile_phones"*/)
+@Entity()
+@Table()
 public class CellPhone {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(unique = true, updatable = false, nullable = false)
+    @NotNull(message = "MIN is required")
     private Long mobileIdentificationNumber;
 
     @Column(unique = true, updatable = false, nullable = false)
+    @NotNull(message = "IMEI is required")
     private Long internationalMobileEquipmentIdentity;
 
     @Column()
+    @NotEmpty(message = "Maker cannot be empty.")
+    @Size(max = 20, message = "Length is greater than 20 characters")
     private String maker;
 
     @Column()
+    @NotNull(message = "Year cannot be null")
     private Short year;
 
     @Column()
+    @NotEmpty(message = "Color cannot be empty.")
+    @Size(max = 20, message = "Length is greater than 20 characters")
     private String color;
 
     @Column()
+    @NotEmpty(message = "Model cannot be empty.")
+    @Size(max = 20, message = "Length is greater than 20 characters")
     private String model;
 
     @Column()
+    @NotEmpty(message = "Model Number cannot be empty.")
+    @Size(max = 20, message = "Length is greater than 20 characters")
     private String modelNumber;
 
     @Column()
     private Long version;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    Set<AppUser> users = new HashSet<>();
+    @Column(nullable = false)
+    private Boolean isNew = true;
 
-    public CellPhone(Long id, Long mobileIdentificationNumber, Long internationalMobileEquipmentIdentity, String maker, Short year, String color, String model, String modelNumber, Long version, Set<AppUser> users) {
+    @Column()
+    @Size(max = 20, message = "Length is greater than 20 characters")
+    private String currentAppUser;
+
+    @Column()
+    @Size(max = 20, message = "Length is greater than 20 characters")
+    private String currentAppOrder;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<AppOrder> appOrders = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<AppUser> appUsers = new HashSet<>();
+
+    public CellPhone(Long id, Long mobileIdentificationNumber, Long internationalMobileEquipmentIdentity, String maker, Short year, String color, String model, String modelNumber, Long version, Boolean isNew, String currentAppUser, String currentAppOrder, Set<AppOrder> appOrders, Set<AppUser> appUsers) {
         this.id = id;
         this.mobileIdentificationNumber = mobileIdentificationNumber;
         this.internationalMobileEquipmentIdentity = internationalMobileEquipmentIdentity;
@@ -50,7 +79,11 @@ public class CellPhone {
         this.model = model;
         this.modelNumber = modelNumber;
         this.version = version;
-        this.users = users;
+        this.isNew = isNew;
+        this.currentAppUser = currentAppUser;
+        this.currentAppOrder = currentAppOrder;
+        this.appOrders = appOrders;
+        this.appUsers = appUsers;
     }
 
     public CellPhone() { super(); }
@@ -127,12 +160,44 @@ public class CellPhone {
         this.version = version;
     }
 
-    public Set<AppUser> getUsers() {
-        return users;
+    public Boolean getNew() {
+        return isNew;
     }
 
-    public void setUsers(Set<AppUser> users) {
-        this.users = users;
+    public void setNew(Boolean aNew) {
+        isNew = aNew;
+    }
+
+    public String getCurrentAppUser() {
+        return currentAppUser;
+    }
+
+    public void setCurrentAppUser(String currentAppUser) {
+        this.currentAppUser = currentAppUser;
+    }
+
+    public String getCurrentAppOrder() {
+        return currentAppOrder;
+    }
+
+    public void setCurrentAppOrder(String currentAppOrder) {
+        this.currentAppOrder = currentAppOrder;
+    }
+
+    public Set<AppOrder> getAppOrders() {
+        return appOrders;
+    }
+
+    public void setAppOrders(Set<AppOrder> appOrders) {
+        this.appOrders = appOrders;
+    }
+
+    public Set<AppUser> getAppUsers() {
+        return appUsers;
+    }
+
+    public void setAppUsers(Set<AppUser> appUsers) {
+        this.appUsers = appUsers;
     }
 
     @Override
@@ -140,12 +205,12 @@ public class CellPhone {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CellPhone cellPhone = (CellPhone) o;
-        return Objects.equals(id, cellPhone.id) && Objects.equals(mobileIdentificationNumber, cellPhone.mobileIdentificationNumber) && Objects.equals(internationalMobileEquipmentIdentity, cellPhone.internationalMobileEquipmentIdentity) && Objects.equals(maker, cellPhone.maker) && Objects.equals(year, cellPhone.year) && Objects.equals(color, cellPhone.color) && Objects.equals(model, cellPhone.model) && Objects.equals(modelNumber, cellPhone.modelNumber) && Objects.equals(version, cellPhone.version) && Objects.equals(users, cellPhone.users);
+        return Objects.equals(id, cellPhone.id) && Objects.equals(mobileIdentificationNumber, cellPhone.mobileIdentificationNumber) && Objects.equals(internationalMobileEquipmentIdentity, cellPhone.internationalMobileEquipmentIdentity) && Objects.equals(maker, cellPhone.maker) && Objects.equals(year, cellPhone.year) && Objects.equals(color, cellPhone.color) && Objects.equals(model, cellPhone.model) && Objects.equals(modelNumber, cellPhone.modelNumber) && Objects.equals(version, cellPhone.version) && Objects.equals(isNew, cellPhone.isNew) && Objects.equals(currentAppUser, cellPhone.currentAppUser) && Objects.equals(currentAppOrder, cellPhone.currentAppOrder) && Objects.equals(appOrders, cellPhone.appOrders) && Objects.equals(appUsers, cellPhone.appUsers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mobileIdentificationNumber, internationalMobileEquipmentIdentity, maker, year, color, model, modelNumber, version, users);
+        return Objects.hash(id, mobileIdentificationNumber, internationalMobileEquipmentIdentity, maker, year, color, model, modelNumber, version, isNew, currentAppUser, currentAppOrder, appOrders, appUsers);
     }
 
     @Override
@@ -160,7 +225,11 @@ public class CellPhone {
                 ", model='" + model + '\'' +
                 ", modelNumber='" + modelNumber + '\'' +
                 ", version=" + version +
-                ", users=" + users +
+                ", isNew=" + isNew +
+                ", currentAppUser='" + currentAppUser + '\'' +
+                ", currentAppOrder='" + currentAppOrder + '\'' +
+                ", appOrders=" + appOrders +
+                ", appUsers=" + appUsers +
                 '}';
     }
 }

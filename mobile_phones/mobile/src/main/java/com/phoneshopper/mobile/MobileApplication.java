@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 
-@SpringBootApplication(/*exclude = {DataSourceAutoConfiguration.class}*/)
+@SpringBootApplication()
 public class MobileApplication {
 
 	public static void main(String[] args) {

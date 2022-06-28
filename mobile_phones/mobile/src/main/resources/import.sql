@@ -1,0 +1,1 @@
+--INSERT INTO cell_phone VALUES (1, "green", null, null, true, "Samsing", 1282891212, 223823993, 2021, "X Fold 3", "3763423", 0);

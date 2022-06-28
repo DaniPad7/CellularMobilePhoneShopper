@@ -10,14 +10,18 @@ const UserSchema = new mongoose.Schema({
         lowercase: true,
         required: true,
         index: true,
-        unique: true
+        unique: true,
+        maxlength: 20,
+        minlength: 5
     },
     email: {
         type: String,
         lowercase: true,
         required: true,
         index: true,
-        unique: true
+        unique: true,
+        maxlength: 20,
+        minlength: 5,
     },
     hash: {
         type: String,
